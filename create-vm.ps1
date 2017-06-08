@@ -1,7 +1,7 @@
 param (
     [Parameter(Mandatory=$True)][string]$IsoPath,
     [string]$VmName = "vagrant",
-    [string]$VhdDirectory = Join-Path ([System.Environment]::GetFolderPath("CommonDocuments")) "Hyper-V\Virtual Hard Disks"
+    [string]$VhdDirectory = (Join-Path ([System.Environment]::GetFolderPath("CommonDocuments")) "Hyper-V\Virtual Hard Disks")
 )
 
 If (Get-VM -Name $VmName -ErrorAction SilentlyContinue) {
