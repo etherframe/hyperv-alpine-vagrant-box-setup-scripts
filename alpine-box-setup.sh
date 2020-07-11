@@ -18,4 +18,10 @@ rc-update add hv_vss_daemon
 
 apk del openssl
 
+echo -n "Delete script (y/n)?"
+read DELETE_SCRIPT
+if [ "$DELETE_SCRIPT" != "${DELETE_SCRIPT#[Yy]}" ] ;then
+	rm "$0"
+fi
+
 find / -name .ash_history -delete
