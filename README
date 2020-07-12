@@ -1,0 +1,80 @@
+1. Run PowerShell as Administrator.
+
+2. Run command:
+
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+
+to allow running of unsigned PowerShell scripts.
+
+2. Run the PowerShell script for creating the virtual machine:
+
+.\create-vm.ps1 -IsoPath ISO_PATH
+
+replacing ISO_PATH with the path to the Alpine Linux ISO file (make sure you previously downloaded the Virtual flavor of Alpine Linux).
+
+3. Start the virtual machine (login as root) and then run the following command on the virtual machine:
+
+setup-alpine
+
+4. Go through the alpine linux installation:
+
+- Choose "us" twice as the keyboard layout.
+- Enter "vagrant" as the hostname.
+- Choose the default (eth0, dhcp, no) network interface options.
+- Enter "vagrant" as the root password.
+- Choose the default (UTC) timezone.
+- Choose the default (none) for HTTP/FTP proxy URL.
+- Choose the default (chrony) for NTP client.
+- Choose the default (1) for mirror.
+- Choose the default (openssh) for SSH client.
+- Choose "sda" and "sys" options for installing to the hard drive.
+
+5. After installation completes, go to the menu Media > DVD Drive and eject the ISO.
+
+6. Reboot the virtual machine by running the command:
+
+reboot
+
+7. On the host, use the "Encode Text As Scancodes" script to convert the following URL to linux scancodes and copy the result to the clipboard:
+
+https://raw.githubusercontent.com/etherframe/hyperv-alpine-vagrant-box-setup-scripts/master/alpine-box-setup.sh
+
+8. Login as root on the virtual machine.
+
+9. Change directory to the root.
+
+10. Run the following command, pasting in the scancodes from the earlier step (you may have to fix some characters):
+
+wget PASTED_SCANCODES
+
+11. Make the downloaded script executable by running the command:
+
+chmod +x alpine-box-setup.sh
+
+12. Run the script by running the command and confirm to delete the setup script if no errors occurred:
+
+./alpine-box-setup.sh
+
+13. Shut down the virtual machine.
+
+14. Run the PowerShell script for exporting the virtual machine and packaging it as a Vagrant box:
+
+.\package-box.ps1
+
+15. In order to test the box, run the command:
+
+vagrant box add BOX_PATH --name etherframe/alpine64-test
+
+replacing BOX_PATH with the path to the newly created box file.
+
+16. Run command:
+
+vagrant up --no-provision
+
+to do a simple test of the box.
+
+17. Run command:
+
+vagrant box remove etherframe/alpine64-test
+
+to remove the test box.
