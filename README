@@ -26,7 +26,10 @@ setup-alpine
 - Choose the default (none) for HTTP/FTP proxy URL.
 - Choose the default (chrony) for NTP client.
 - Choose the default (1) for mirror.
+- Choose the default (no) for setting up a user.
 - Choose the default (openssh) for SSH client.
+- Choose the default (prohibit-password) for allowing root ssh login.
+- Choose the default (none) for ssh key or URL for root.
 - Choose "sda" and "sys" options for installing to the hard drive.
 
 5. After installation completes, go to the menu Media > DVD Drive and eject the ISO.
