@@ -1,5 +1,7 @@
 #!/bin/sh
 
+METADATA_URL="http://169.254.169.254/metadata/v1"
+
 rc-update add sshd default
 
 cat > /etc/network/interfaces <<- EOF
@@ -13,24 +15,33 @@ ln -s networking /etc/init.d/net.eth0
 rc-update add net.eth0 default
 rc-update add net.lo boot
 
-mkdir -p /root/.ssh
-chmod 700 /root/.ssh
+mkdir -m0700 -p /root/.ssh
 
 cat > /bin/do-init <<- EOF
 	#!/bin/sh
-	wget -T 5 http://169.254.169.254/metadata/v1/hostname -q -O /etc/hostname
+
+	# Get hostname
+	wget -O /etc/hostname $METADATA_URL/hostname
 	hostname -F /etc/hostname
-	wget -T 5 http://169.254.169.254/metadata/v1/public-keys -O /root/.ssh/authorized_keys
-	chmod 600 /root/.ssh/authorized_keys
+
+	# Get SSH key
+	wget -O /root/.ssh/authorized_keys $METADATA_URL/public-keys
+	chmod 0600 /root/.ssh/authorized_keys
+
+	# Clean up init
 	rc-update del do-init default
+	rm "\$0"
+
 	exit 0
 EOF
 
 cat > /etc/init.d/do-init <<- EOF
 	#!/sbin/openrc-run
+
 	depend() {
 	    need net.eth0
 	}
+
 	command="/bin/do-init"
 	command_args=""
 	pidfile="/tmp/do-init.pid"
