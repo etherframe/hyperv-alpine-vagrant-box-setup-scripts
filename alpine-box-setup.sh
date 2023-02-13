@@ -1,13 +1,13 @@
 #!/bin/sh
 
-apk add --no-cache --upgrade sudo openssl hvtools cifs-utils
+apk add --no-cache --upgrade doas openssl hvtools cifs-utils
 
 adduser -D vagrant
 echo 'vagrant:vagrant' | chpasswd
-echo 'vagrant ALL=(ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo
+echo 'permit nopass vagrant as root' >> /etc/doas.d/doas.conf
 
-sudo -u vagrant mkdir -m0700 -p /home/vagrant/.ssh
-sudo -u vagrant wget -O /home/vagrant/.ssh/authorized_keys https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub
+doas -u vagrant mkdir -m0700 -p /home/vagrant/.ssh
+doas -u vagrant wget -O /home/vagrant/.ssh/authorized_keys https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub
 chmod 0600 /home/vagrant/.ssh/authorized_keys
 
 echo 'UseDNS no' >> /etc/ssh/sshd_config
