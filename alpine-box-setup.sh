@@ -2,7 +2,7 @@
 
 apk add --no-cache --upgrade doas openssl hvtools cifs-utils
 
-DOAS_CONF="/etc/ssh/sshd_config"
+DOAS_CONF="/etc/doas.d/doas.conf"
 echo "permit nopass root" >> "$DOAS_CONF"
 
 adduser -D vagrant
